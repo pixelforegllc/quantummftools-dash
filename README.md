@@ -1,7 +1,21 @@
-<<<<<<< HEAD
 # QuantumMF Tools Dashboard
 
 A comprehensive enterprise-grade web application portal designed to automate daily tasks and streamline operations for internal teams. This platform provides a centralized hub for task automation, API integrations, and team collaboration with a focus on security, scalability, and ease of use.
+
+![Project Status](https://img.shields.io/badge/status-in%20development-yellow)
+![Version](https://img.shields.io/badge/version-1.0.0-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+
+## 📚 Table of Contents
+- [Project Overview](#-project-overview)
+- [Features](#-features)
+- [Technical Stack](#-technical-stack)
+- [Project Structure](#-project-structure)
+- [Getting Started](#-getting-started)
+- [Development Guide](#-development-guide)
+- [API Documentation](#-api-documentation)
+- [Deployment](#-deployment)
+- [Contributing](#-contributing)
 
 ## 📋 Project Overview
 
@@ -13,275 +27,334 @@ The QuantumMF Tools Dashboard serves as a unified platform that:
 - Offers role-based access control
 - Enables easy addition of new tools and automations
 
-### Key Features
-1. API Integration Management
-   - Secure storage of API credentials
-   - Dynamic API key rotation
-   - Usage monitoring and logging
-
-2. SMS Automation System
-   - Template management
-   - Scheduling system
-   - Delivery tracking
-   - Integration with Infobip
-
-3. Zoho CRM Integration
-   - Lead management automation
-   - Data synchronization
-   - Custom workflow triggers
-
-4. User Management
-   - AD integration
-   - Role-based access control
-   - Activity logging
-   - Session management
-
-## 🚀 Current Project Status
-
-### Completed Components
-- Initial backend setup with Express.js
+### Current Implementation Status
+✅ Completed:
+- Project structure and architecture
+- Backend API framework
+- Frontend foundation with CoreUI
 - API key management system
 - Basic security configurations
-- MongoDB integration structure
+- Initial documentation
 
-### In Progress
-- Authentication system
-- Frontend implementation
-- Nginx configuration
-- Database server setup
+🏗️ In Progress:
+- User authentication system
+- SMS automation interface
+- Database configuration
+- API integrations
 
-### Next Steps
-- Deploy frontend with CoreUI
-- Implement SMS automation system
-- Set up AD integration
-- Configure monitoring and logging
+🔜 Planned:
+- AD integration
+- Real-time notifications
+- Advanced monitoring
+- Automated testing
 
-## 🏗 Project Structure
+## 🎯 Features
 
-```
-quantummftools/
-├── backend/
-│   ├── src/
-│   │   ├── controllers/
-│   │   ├── models/
-│   │   │   └── ApiKey.js
-│   │   ├── routes/
-│   │   │   └── apiKeys.js
-│   │   ├── middleware/
-│   │   ├── config/
-│   │   └── index.js
-│   ├── package.json
-│   └── .env
-├── frontend/
-│   └── (Coming soon - CoreUI implementation)
-├── config/
-│   └── (Configuration files)
-└── docs/
-    └── (Documentation files)
+### 1. API Integration Management
+- Secure credential storage
+- Dynamic API key rotation
+- Usage monitoring and logging
+- Support for multiple services:
+  - Zoho CRM
+  - Infobip
+  - More to come
 
-```
+### 2. SMS Automation System
+- Template management
+- Dynamic scheduling
+- Delivery tracking
+- Analytics dashboard
+
+### 3. User Management
+- Role-based access control
+- AD integration
+- Activity logging
+- Session management
+
+### 4. Security Features
+- JWT authentication
+- API key encryption
+- Rate limiting
+- Input validation
+- XSS protection
 
 ## 🛠 Technical Stack
 
-### Backend
-- Node.js with Express.js
-- MongoDB for database
-- JWT for authentication
-- Winston for logging
+### Backend Architecture
+- **Runtime**: Node.js 20.x
+- **Framework**: Express.js 4.x
+- **Database**: MongoDB 7.x
+- **Authentication**: JWT + AD Integration
+- **Documentation**: Swagger/OpenAPI 3.0
+- **Process Manager**: PM2
 
-### Frontend (Planned)
-- React.js
-- CoreUI Admin Dashboard
-- Redux for state management
-- Axios for API calls
+### Frontend Architecture
+- **Framework**: React.js 18.x
+- **UI Framework**: CoreUI Pro
+- **State Management**: Redux Toolkit
+- **API Client**: Axios
+- **Form Management**: Formik + Yup
+- **Styling**: Sass/SCSS
 
-### Infrastructure
-- Digital Ocean VPC
-- Nginx reverse proxy
-- SSL/TLS encryption
-- MongoDB database server
+### Development Tools
+- **Version Control**: Git
+- **Code Quality**: ESLint + Prettier
+- **Testing**: Jest + React Testing Library
+- **API Testing**: Postman/Insomnia
 
-## 🔧 Installation & Setup
+## 📁 Project Structure
+
+### Backend Structure
+```bash
+backend/
+├── src/
+│   ├── controllers/     # Request handlers
+│   ├── models/         # Database models
+│   ├── routes/         # API routes
+│   ├── middleware/     # Custom middleware
+│   ├── services/       # Business logic
+│   ├── utils/          # Helper functions
+│   └── config/         # Configuration files
+├── tests/              # Test files
+└── docs/              # API documentation
+```
+
+### Frontend Structure
+```bash
+frontend/
+├── src/
+│   ├── components/     # Reusable components
+│   ├── containers/     # Container components
+│   ├── views/          # Page components
+│   │   ├── dashboard/
+│   │   ├── api-keys/
+│   │   ├── sms/
+│   │   └── settings/
+│   ├── store/          # Redux store setup
+│   │   └── slices/     # Redux slices
+│   ├── services/       # API services
+│   ├── utils/          # Helper functions
+│   ├── assets/         # Static assets
+│   ├── styles/         # Global styles
+│   └── layouts/        # Page layouts
+├── public/            # Static files
+└── tests/            # Test files
+```
+
+## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js v20.x or higher
-- MongoDB
-- Nginx
-- Git
+```bash
+node v20.x
+mongodb v7.x
+npm v10.x
+git
+```
 
-### Backend Setup
+### Installation Steps
+
 1. Clone the repository:
-   ```bash
-   git clone [repository-url]
-   cd quantummftools
-   ```
+```bash
+git clone https://github.com/pixelforegllc/quantummftools-dash.git
+cd quantummftools-dash
+```
 
-2. Install dependencies:
-   ```bash
-   cd backend
-   npm install
-   ```
+2. Install backend dependencies:
+```bash
+cd backend
+npm install
+```
 
-3. Configure environment variables:
-   ```bash
-   cp .env.example .env
-   # Edit .env with your configuration
-   ```
+3. Install frontend dependencies:
+```bash
+cd ../frontend
+npm install
+```
 
-4. Start the development server:
-   ```bash
-   npm run dev
-   ```
+4. Configure environment variables:
+```bash
+# Backend
+cp .env.example .env
+# Edit .env with your settings
 
-## 🔄 Adding New Tools
+# Frontend
+cp .env.example .env
+# Edit .env with your settings
+```
 
-To add new tools to the platform:
+5. Start development servers:
+```bash
+# Backend
+npm run dev
 
-1. Backend Integration:
-   - Create a new model in `/backend/src/models/`
-   - Add corresponding routes in `/backend/src/routes/`
-   - Implement controllers in `/backend/src/controllers/`
-   - Add any necessary middleware in `/backend/src/middleware/`
+# Frontend
+npm start
+```
 
-2. Frontend Integration:
-   - Create a new component in the frontend directory
-   - Add route in the frontend router
-   - Implement necessary Redux actions/reducers
-   - Add to the sidebar navigation
+## 💻 Development Guide
 
-3. Configuration:
-   - Add any necessary environment variables
-   - Update API documentation
-   - Add database migrations if required
+### Adding New Tools
 
-## 📋 Current Features
+1. Backend Implementation:
+```javascript
+// 1. Create Model
+const toolSchema = new mongoose.Schema({
+    name: String,
+    config: Object,
+    status: String
+});
 
-### API Key Management
-- Secure storage of API credentials
-- CRUD operations for API keys
-- Service-specific validation
-- Activity tracking
+// 2. Create Controller
+const toolController = {
+    create: async (req, res) => {
+        // Implementation
+    }
+};
 
-### Security Features
-- Helmet.js security headers
-- CORS protection
-- Rate limiting
-- JWT authentication (in progress)
+// 3. Add Routes
+router.post('/tools', toolController.create);
+```
 
-## 🎯 Planned Features
+2. Frontend Implementation:
+```javascript
+// 1. Create Component
+const ToolComponent = () => {
+    // Implementation
+};
 
-1. SMS Automation Tool
-   - Infobip integration
-   - Message templating
-   - Scheduling system
-   - Delivery tracking
+// 2. Add to Navigation
+const routes = [{
+    path: '/tool',
+    component: ToolComponent
+}];
+```
 
-2. Zoho CRM Integration
-   - Lead management
-   - Automated workflows
-   - Data synchronization
+### Tool Integration Process
 
-3. AD Integration
-   - Single Sign-On
-   - Role-based access control
-   - User management
+1. Planning Phase:
+   - Define requirements
+   - Design database schema
+   - Plan API endpoints
+   - Design UI components
 
-## 🚦 Infrastructure Details
+2. Implementation Phase:
+   - Create backend endpoints
+   - Implement frontend interface
+   - Add tests
+   - Update documentation
 
-### Application Server
-- Hostname: webapp-main-prod
-- Public IP: 164.92.79.175
-- Private IP: 10.124.32.4
+3. Testing Phase:
+   - Unit tests
+   - Integration tests
+   - UI testing
+   - Security testing
 
-### Database Server
-- Hostname: webapp-db-prod
-- Public IP: 144.126.213.183
-- Private IP: 10.124.32.2
+4. Deployment Phase:
+   - Code review
+   - Testing in staging
+   - Production deployment
+   - Monitoring setup
 
-### Network
-- VPC Name: webapp-vpc-prod
-- IP Range: 10.124.32.0/20
+## 🔒 Security Implementations
 
-## 📝 Development Guidelines
+1. API Security:
+   - JWT authentication
+   - Rate limiting
+   - Request validation
+   - API key encryption
 
-1. Code Structure
-   - Follow MVC pattern
-   - Use async/await for asynchronous operations
-   - Implement error handling middleware
-   - Use TypeScript for new features (planned)
-
-2. Security
-   - Never commit sensitive data
-   - Use environment variables for configurations
-   - Implement input validation
+2. Data Security:
+   - Database encryption
+   - Secure credential storage
    - Regular security audits
 
-3. Testing
-   - Write unit tests for new features
-   - Implement integration tests
-   - Use Jest for testing framework
+3. Infrastructure Security:
+   - VPC configuration
+   - Firewall rules
+   - SSL/TLS encryption
 
-## 🔒 Security Considerations
+## 📊 Monitoring & Logging
 
-- All API keys are encrypted before storage
-- HTTPS enforced for all connections
-- Regular security audits planned
-- Automated vulnerability scanning
+### Application Monitoring
+- PM2 process management
+- Response time tracking
+- Error rate monitoring
+- Resource utilization
 
-## 📈 Monitoring and Logging
+### Business Metrics
+- API usage statistics
+- User activity tracking
+- Tool performance metrics
+- Integration status
 
-Planned implementation:
-- Winston for application logging
-- PM2 for process management
-- Prometheus for metrics
-- Grafana for visualization
+## 🚀 Deployment
+
+### Infrastructure Details
+- **Network Name**: webapp-vpc-prod
+- **IP Range**: 10.124.32.0/20
+- **Domain**: quantummftools.com
+
+### Application Server
+- **Hostname**: webapp-main-prod
+- **Public IP**: 164.92.79.175
+- **Private IP**: 10.124.32.4
+
+### Database Server
+- **Hostname**: webapp-db-prod
+- **Public IP**: 144.126.213.183
+- **Private IP**: 10.124.32.2
+
+## 🔄 Ongoing Development
+
+### Current Sprint Focus
+1. Authentication System Implementation
+2. SMS Automation Interface
+3. API Integration Tests
+4. Documentation Updates
+
+### Upcoming Features
+1. Real-time Notifications
+2. Advanced Analytics
+3. Automated Reports
+4. Integration Templates
 
 ## 🤝 Contributing
 
-1. Create a feature branch
-2. Commit your changes
-3. Push to the branch
-4. Create a Pull Request
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed contribution guidelines.
 
-## 📚 Documentation
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
 
-Additional documentation will be maintained in the `/docs` directory:
-- API Documentation
-- Deployment Guides
-- User Manuals
-- Contributing Guidelines
+## 📝 License
 
-## 🔄 Development Progress
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-The application is currently in Phase 1 of development:
+## 🔗 Additional Resources
 
-Phase 1 (Current):
-- ✅ Basic backend structure
-- ✅ API key management
-- 🏗️ Authentication system
-- 🏗️ Database setup
+- [API Documentation](docs/api.md)
+- [Development Guide](docs/development.md)
+- [Deployment Guide](docs/deployment.md)
+- [Security Guidelines](docs/security.md)
 
-Phase 2 (Next):
-- Frontend implementation
-- SMS automation tool
-- User management
-- AD integration
+## 👥 Project Contacts
 
-Phase 3 (Planned):
-- Additional tool integrations
-- Advanced automation features
-- Reporting system
-- Analytics dashboard
-
-## 💬 Support
-
-For support and questions, please create an issue in the repository.
+For questions and support:
+- Create an issue in the repository
+- Contact the development team
+- Check the documentation
 
 ---
 
-## 📜 Development History
+## 📅 Development Progress Log
 
-[Chat transcript will be added here]
-=======
-# quantummftools-dash
->>>>>>> 07cac4d3c9082f2bcfea40619dc0c9b984316135
+### November 14, 2024
+- Initial project setup
+- Backend API structure implementation
+- Frontend CoreUI integration
+- API key management system
+- Basic documentation
+
+[Additional development progress will be logged here]
