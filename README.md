@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # QuantumMF Tools Dashboard
 
 A comprehensive enterprise-grade web application portal designed to automate daily tasks and streamline operations for internal teams. This platform provides a centralized hub for task automation, API integrations, and team collaboration with a focus on security, scalability, and ease of use.
@@ -281,3 +282,6 @@ For support and questions, please create an issue in the repository.
 ## 📜 Development History
 
 [Chat transcript will be added here]
+=======
+# quantummftools-dash
+>>>>>>> 07cac4d3c9082f2bcfea40619dc0c9b984316135
