@@ -1,6 +1,39 @@
-# QuantumMF Tools Web Portal
+# QuantumMF Tools Dashboard
 
-A comprehensive web application portal for automating daily tasks and managing internal tools. This application provides a centralized platform for task automation, API integrations, and team collaboration.
+A comprehensive enterprise-grade web application portal designed to automate daily tasks and streamline operations for internal teams. This platform provides a centralized hub for task automation, API integrations, and team collaboration with a focus on security, scalability, and ease of use.
+
+## 📋 Project Overview
+
+### Purpose
+The QuantumMF Tools Dashboard serves as a unified platform that:
+- Automates repetitive daily tasks
+- Centralizes API integrations (Zoho CRM, Infobip, etc.)
+- Provides secure user authentication with AD integration
+- Offers role-based access control
+- Enables easy addition of new tools and automations
+
+### Key Features
+1. API Integration Management
+   - Secure storage of API credentials
+   - Dynamic API key rotation
+   - Usage monitoring and logging
+
+2. SMS Automation System
+   - Template management
+   - Scheduling system
+   - Delivery tracking
+   - Integration with Infobip
+
+3. Zoho CRM Integration
+   - Lead management automation
+   - Data synchronization
+   - Custom workflow triggers
+
+4. User Management
+   - AD integration
+   - Role-based access control
+   - Activity logging
+   - Session management
 
 ## 🚀 Current Project Status
 
