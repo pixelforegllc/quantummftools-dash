@@ -1,7 +1,12 @@
-import React, { Suspense } from 'react'
-import { HashRouter, Route, Routes } from 'react-router-dom'
-import { Provider } from 'react-redux'
+import React, { Suspense, useEffect } from 'react'
+import { HashRouter, Route, Routes, Navigate } from 'react-router-dom'
+import { Provider, useSelector, useDispatch } from 'react-redux'
 import { store } from './store'
+import { checkAuth } from './store/slices/authSlice'
+import ProtectedRoute from './components/ProtectedRoute'
+
+// Import axios interceptor
+import './services/axiosInterceptor'
 
 // Containers
 const DefaultLayout = React.lazy(() => import('./layouts/DefaultLayout'))
@@ -18,18 +23,50 @@ const loading = (
   </div>
 )
 
+const AppRoutes = () => {
+  const dispatch = useDispatch()
+  const { isAuthenticated, checking } = useSelector((state) => state.auth)
+
+  useEffect(() => {
+    dispatch(checkAuth())
+  }, [dispatch])
+
+  if (checking) {
+    return loading
+  }
+
+  return (
+    <Routes>
+      <Route
+        exact
+        path="/login"
+        element={isAuthenticated ? <Navigate to="/dashboard" /> : <Login />}
+      />
+      <Route
+        exact
+        path="/register"
+        element={isAuthenticated ? <Navigate to="/dashboard" /> : <Register />}
+      />
+      <Route exact path="/404" element={<Page404 />} />
+      <Route exact path="/500" element={<Page500 />} />
+      <Route
+        path="/*"
+        element={
+          <ProtectedRoute>
+            <DefaultLayout />
+          </ProtectedRoute>
+        }
+      />
+    </Routes>
+  )
+}
+
 function App() {
   return (
     <Provider store={store}>
       <HashRouter>
         <Suspense fallback={loading}>
-          <Routes>
-            <Route exact path="/login" name="Login Page" element={<Login />} />
-            <Route exact path="/register" name="Register Page" element={<Register />} />
-            <Route exact path="/404" name="Page 404" element={<Page404 />} />
-            <Route exact path="/500" name="Page 500" element={<Page500 />} />
-            <Route path="*" name="Home" element={<DefaultLayout />} />
-          </Routes>
+          <AppRoutes />
         </Suspense>
       </HashRouter>
     </Provider>
