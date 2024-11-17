@@ -7,6 +7,10 @@
     "frontend"
   ],
   "scripts": {
-    "test": "npm run test --workspaces"
+    "test": "npm run test --workspaces",
+    "lint": "npm run lint --workspaces",
+    "lint:fix": "npm run lint:fix --workspaces",
+    "dev:backend": "npm run dev -w backend",
+    "dev:frontend": "npm run dev -w frontend"
   }
 }
