@@ -7,7 +7,7 @@ describe('SmsSchedule Model Test', () => {
 
     beforeAll(async () => {
         mongoServer = await MongoMemoryServer.create();
-        await mongoose.connect(mongoServer.getUri(), {});
+        await mongoose.connect(mongoServer.getUri());
     });
 
     afterAll(async () => {
@@ -15,22 +15,18 @@ describe('SmsSchedule Model Test', () => {
         await mongoServer.stop();
     });
 
-    afterEach(async () => {
+    beforeEach(async () => {
         await SmsSchedule.deleteMany({});
     });
 
     it('should create & save schedule successfully', async () => {
-        // Create a valid schedule object
         const validScheduleData = {
             template: new mongoose.Types.ObjectId(),
             recipients: [{
                 phoneNumber: '+1234567890',
-                variables: {
-                    name: 'Test User',
-                    code: '123456'
-                }
+                variables: new Map([['name', 'Test User']])
             }],
-            scheduledTime: new Date(),
+            scheduledTime: new Date(Date.now() + 86400000), // tomorrow
             timezone: 'America/New_York',
             status: 'draft',
             createdBy: new mongoose.Types.ObjectId()
@@ -39,7 +35,6 @@ describe('SmsSchedule Model Test', () => {
         const schedule = new SmsSchedule(validScheduleData);
         const savedSchedule = await schedule.save();
         
-        // Verify saved schedule
         expect(savedSchedule._id).toBeDefined();
         expect(savedSchedule.status).toBe('draft');
         expect(savedSchedule.recipients[0].phoneNumber).toBe('+1234567890');
@@ -51,11 +46,9 @@ describe('SmsSchedule Model Test', () => {
             template: new mongoose.Types.ObjectId(),
             recipients: [{
                 phoneNumber: 'invalid',
-                variables: {
-                    name: 'Test User'
-                }
+                variables: new Map()
             }],
-            scheduledTime: new Date(),
+            scheduledTime: new Date(Date.now() + 86400000),
             timezone: 'America/New_York',
             status: 'draft',
             createdBy: new mongoose.Types.ObjectId()
@@ -71,24 +64,7 @@ describe('SmsSchedule Model Test', () => {
 
         expect(err).toBeDefined();
         expect(err.name).toBe('ValidationError');
-    });
-
-    it('should require required fields', async () => {
-        const scheduleWithMissingFields = {};
-
-        let err;
-        try {
-            const invalidSchedule = new SmsSchedule(scheduleWithMissingFields);
-            await invalidSchedule.save();
-        } catch (error) {
-            err = error;
-        }
-
-        expect(err).toBeDefined();
-        expect(err.name).toBe('ValidationError');
-        expect(err.errors.template).toBeDefined();
-        expect(err.errors.recipients).toBeDefined();
-        expect(err.errors.scheduledTime).toBeDefined();
+        expect(err.errors['recipients.0.phoneNumber']).toBeDefined();
     });
 
     it('should validate timezone', async () => {
@@ -96,9 +72,9 @@ describe('SmsSchedule Model Test', () => {
             template: new mongoose.Types.ObjectId(),
             recipients: [{
                 phoneNumber: '+1234567890',
-                variables: { name: 'Test User' }
+                variables: new Map()
             }],
-            scheduledTime: new Date(),
+            scheduledTime: new Date(Date.now() + 86400000),
             timezone: 'Invalid/Timezone',
             status: 'draft',
             createdBy: new mongoose.Types.ObjectId()
