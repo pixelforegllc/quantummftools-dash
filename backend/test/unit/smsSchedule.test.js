@@ -1,50 +1,119 @@
-const { MongoMemoryServer } = require('mongodb-memory-server');
 const mongoose = require('mongoose');
-const { SmsSchedule } = require('../../src/models/SmsSchedule');
+const { MongoMemoryServer } = require('mongodb-memory-server');
+const SmsSchedule = require('../../src/models/SmsSchedule');
 
 describe('SmsSchedule Model Test', () => {
-    let mongod;
+    let mongoServer;
 
     beforeAll(async () => {
-        mongod = await MongoMemoryServer.create();
-        const uri = mongod.getUri();
-        await mongoose.connect(uri);
+        mongoServer = await MongoMemoryServer.create();
+        await mongoose.connect(mongoServer.getUri(), {});
     });
 
     afterAll(async () => {
         await mongoose.disconnect();
-        await mongod.stop();
+        await mongoServer.stop();
+    });
+
+    afterEach(async () => {
+        await SmsSchedule.deleteMany({});
     });
 
     it('should create & save schedule successfully', async () => {
-        const validSchedule = new SmsSchedule({
-            templateId: new mongoose.Types.ObjectId(),
-            recipientNumber: '+1234567890',
+        // Create a valid schedule object
+        const validScheduleData = {
+            template: new mongoose.Types.ObjectId(),
+            recipients: [{
+                phoneNumber: '+1234567890',
+                variables: {
+                    name: 'Test User',
+                    code: '123456'
+                }
+            }],
             scheduledTime: new Date(),
             timezone: 'America/New_York',
-            status: 'pending'
-        });
-        const savedSchedule = await validSchedule.save();
+            status: 'draft',
+            createdBy: new mongoose.Types.ObjectId()
+        };
+
+        const schedule = new SmsSchedule(validScheduleData);
+        const savedSchedule = await schedule.save();
         
+        // Verify saved schedule
         expect(savedSchedule._id).toBeDefined();
-        expect(savedSchedule.recipientNumber).toBe(validSchedule.recipientNumber);
-        expect(savedSchedule.status).toBe('pending');
+        expect(savedSchedule.status).toBe('draft');
+        expect(savedSchedule.recipients[0].phoneNumber).toBe('+1234567890');
+        expect(savedSchedule.timezone).toBe('America/New_York');
     });
 
     it('should fail to save with invalid phone number', async () => {
-        const scheduleWithInvalidPhone = new SmsSchedule({
-            templateId: new mongoose.Types.ObjectId(),
-            recipientNumber: 'invalid',
+        const scheduleWithInvalidPhone = {
+            template: new mongoose.Types.ObjectId(),
+            recipients: [{
+                phoneNumber: 'invalid',
+                variables: {
+                    name: 'Test User'
+                }
+            }],
             scheduledTime: new Date(),
-            timezone: 'America/New_York'
-        });
+            timezone: 'America/New_York',
+            status: 'draft',
+            createdBy: new mongoose.Types.ObjectId()
+        };
 
         let err;
         try {
-            await scheduleWithInvalidPhone.save();
+            const invalidSchedule = new SmsSchedule(scheduleWithInvalidPhone);
+            await invalidSchedule.save();
         } catch (error) {
             err = error;
         }
-        expect(err).toBeInstanceOf(mongoose.Error.ValidationError);
+
+        expect(err).toBeDefined();
+        expect(err.name).toBe('ValidationError');
+    });
+
+    it('should require required fields', async () => {
+        const scheduleWithMissingFields = {};
+
+        let err;
+        try {
+            const invalidSchedule = new SmsSchedule(scheduleWithMissingFields);
+            await invalidSchedule.save();
+        } catch (error) {
+            err = error;
+        }
+
+        expect(err).toBeDefined();
+        expect(err.name).toBe('ValidationError');
+        expect(err.errors.template).toBeDefined();
+        expect(err.errors.recipients).toBeDefined();
+        expect(err.errors.scheduledTime).toBeDefined();
+    });
+
+    it('should validate timezone', async () => {
+        const scheduleWithInvalidTimezone = {
+            template: new mongoose.Types.ObjectId(),
+            recipients: [{
+                phoneNumber: '+1234567890',
+                variables: { name: 'Test User' }
+            }],
+            scheduledTime: new Date(),
+            timezone: 'Invalid/Timezone',
+            status: 'draft',
+            createdBy: new mongoose.Types.ObjectId()
+        };
+
+        let err;
+        try {
+            const invalidSchedule = new SmsSchedule(scheduleWithInvalidTimezone);
+            await invalidSchedule.save();
+        } catch (error) {
+            err = error;
+        }
+
+        expect(err).toBeDefined();
+        expect(err.name).toBe('ValidationError');
+        expect(err.errors.timezone).toBeDefined();
     });
 });

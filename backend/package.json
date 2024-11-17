@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
-    "test": "jest",
+    "test": "jest --detectOpenHandles --forceExit",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "lint": "eslint . --max-warnings 0",
@@ -22,18 +22,21 @@
     "helmet": "^8.0.0",
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.8.1",
+    "mongoose": "^8.0.1",
     "winston": "^3.17.0"
   },
   "devDependencies": {
-    "chai": "^5.1.2",
+    "@types/jest": "^29.5.10",
     "eslint": "8.54.0",
-    "@eslint/js": "8.54.0",
-    "globals": "13.24.0",
     "jest": "^29.7.0",
-    "mocha": "^10.8.2",
-    "mongodb-memory-server": "^10.1.2",
-    "nodemon": "^3.1.7",
-    "supertest": "^7.0.0"
+    "mongodb-memory-server": "^9.1.1",
+    "nodemon": "^3.0.1",
+    "supertest": "^6.3.3"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testMatch": ["**/test/**/*.test.js"],
+    "verbose": true,
+    "setupFilesAfterEnv": ["./test/setup.js"]
   }
 }
