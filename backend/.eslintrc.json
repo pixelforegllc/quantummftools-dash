@@ -11,11 +11,6 @@
   },
   "rules": {
     "no-console": "off",
-    "no-unused-vars": ["warn", { "argsIgnorePattern": "^_|^next$" }]
-  }
-}
-{
-  "rules": {
     "no-unused-vars": ["error", { "argsIgnorePattern": "^_|^next$" }]
   }
 }
