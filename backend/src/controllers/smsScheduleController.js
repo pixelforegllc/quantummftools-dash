@@ -1,5 +1,4 @@
 const SmsSchedule = require('../models/SmsSchedule');
-const SmsTemplate = require('../models/SmsTemplate');
 const logger = require('../utils/logger');
 const { validateSmsSchedule } = require('../utils/validation');
 

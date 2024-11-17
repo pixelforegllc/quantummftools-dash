@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const smsScheduleController = require('../controllers/smsScheduleController');
 const authMiddleware = require('../middleware/auth');
-const { validateRequest } = require('../middleware/validation');
 
 // Apply authentication middleware to all routes
 router.use(authMiddleware);
