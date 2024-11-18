@@ -31,10 +31,27 @@ jobs:
 
     - name: Install Dependencies
       run: |
+        echo "Installing latest npm globally..."
         npm install -g npm@latest
-        npm ci
+        
+        echo "Cleaning npm cache..."
+        npm cache clean --force
+        
+        echo "Setting up backend dependencies..."
         cd backend
-        npm ci
+        rm -rf node_modules package-lock.json
+        echo "Backend package.json contents:"
+        cat package.json
+        npm install
+        
+        echo "Setting up root dependencies..."
+        cd ..
+        echo "Root package.json contents:"
+        cat package.json
+        npm install
+        
+        echo "Verifying installations..."
+        npm list --all
         
     - name: Run Linter
       run: |

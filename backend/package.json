@@ -3,12 +3,18 @@
   "version": "1.0.0",
   "private": true,
   "main": "src/index.js",
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
     "test": "jest",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "preinstall": "npm install -g npm@latest",
+    "prepare": "npm install"
   },
   "dependencies": {
     "express": "4.17.1",

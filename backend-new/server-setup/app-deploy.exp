@@ -1,0 +1,153 @@
+#!/usr/bin/expect -f
+
+set timeout -1
+set APP_PASSWORD "G6p+9kYtI1q7v4ZQ"
+set JWT_SECRET [exec openssl rand -base64 32]
+set REFRESH_TOKEN_SECRET [exec openssl rand -base64 32]
+set COOKIE_SECRET [exec openssl rand -base64 32]
+
+# Read MongoDB credentials
+set f [open "../database-setup/mongodb-credentials.txt"]
+set mongodb_creds [split [read $f] "\n"]
+close $f
+set DB_APP_PASSWORD [lindex [split [lindex $mongodb_creds 4] ": "] 1]
+
+# Connect to application server
+spawn ssh root@164.92.79.175
+expect "password:"
+send "$APP_PASSWORD\r"
+expect "~#"
+
+# Create setup directory
+send "mkdir -p /var/www/quantummftools\r"
+expect "~#"
+
+# Install Node.js
+send "curl -fsSL https://deb.nodesource.com/setup_20.x | bash -\r"
+expect "~#"
+send "apt-get install -y nodejs\r"
+expect "~#"
+
+# Install PM2
+send "npm install -g pm2\r"
+expect "~#"
+
+# Create environment file
+send "cat > /var/www/quantummftools/.env << 'EOL'\r"
+send "NODE_ENV=production\r"
+send "PORT=3000\r"
+send "APP_NAME=QuantumMF Tools\r"
+send "DOMAIN=quantummftools.com\r"
+send "\r"
+send "# Database Configuration\r"
+send "MONGODB_URI=mongodb://appUser:$DB_APP_PASSWORD@10.124.32.2:27017/quantummftools\r"
+send "MONGODB_DB_NAME=quantummftools\r"
+send "\r"
+send "# JWT Configuration\r"
+send "JWT_SECRET=$JWT_SECRET\r"
+send "JWT_EXPIRATION=24h\r"
+send "REFRESH_TOKEN_SECRET=$REFRESH_TOKEN_SECRET\r"
+send "REFRESH_TOKEN_EXPIRATION=7d\r"
+send "\r"
+send "# Security Configuration\r"
+send "CORS_ORIGIN=https://quantummftools.com\r"
+send "SECURE_COOKIE=true\r"
+send "COOKIE_SECRET=$COOKIE_SECRET\r"
+send "EOL\r"
+expect "~#"
+
+# Install Nginx
+send "apt-get install -y nginx\r"
+expect "~#"
+
+# Configure Nginx
+send "cat > /etc/nginx/sites-available/quantummftools.com << 'EOL'\r"
+send "server {\r"
+send "    listen 80;\r"
+send "    server_name quantummftools.com www.quantummftools.com;\r"
+send "    return 301 https://\$server_name\$request_uri;\r"
+send "}\r"
+send "\r"
+send "server {\r"
+send "    listen 443 ssl http2;\r"
+send "    server_name quantummftools.com www.quantummftools.com;\r"
+send "\r"
+send "    root /var/www/quantummftools/frontend/build;\r"
+send "    index index.html;\r"
+send "\r"
+send "    location / {\r"
+send "        try_files \$uri \$uri/ /index.html;\r"
+send "    }\r"
+send "\r"
+send "    location /api {\r"
+send "        proxy_pass http://localhost:3000;\r"
+send "        proxy_http_version 1.1;\r"
+send "        proxy_set_header Upgrade \$http_upgrade;\r"
+send "        proxy_set_header Connection 'upgrade';\r"
+send "        proxy_set_header Host \$host;\r"
+send "        proxy_cache_bypass \$http_upgrade;\r"
+send "    }\r"
+send "}\r"
+send "EOL\r"
+expect "~#"
+
+# Enable site
+send "ln -sf /etc/nginx/sites-available/quantummftools.com /etc/nginx/sites-enabled/\r"
+expect "~#"
+send "rm -f /etc/nginx/sites-enabled/default\r"
+expect "~#"
+
+# Install Certbot and get SSL certificate
+send "snap install --classic certbot\r"
+expect "~#"
+send "ln -sf /snap/bin/certbot /usr/bin/certbot\r"
+expect "~#"
+send "certbot --nginx -d quantummftools.com -d www.quantummftools.com --non-interactive --agree-tos --email admin@quantummftools.com\r"
+expect "~#"
+
+# Configure firewall
+send "ufw allow 'Nginx Full'\r"
+expect "~#"
+send "ufw allow ssh\r"
+expect "~#"
+send "yes | ufw enable\r"
+expect "~#"
+
+# Save credentials
+send "echo 'Application Credentials' > /root/app-credentials.txt\r"
+send "echo 'JWT Secret: $JWT_SECRET' >> /root/app-credentials.txt\r"
+send "echo 'Refresh Token Secret: $REFRESH_TOKEN_SECRET' >> /root/app-credentials.txt\r"
+send "echo 'Cookie Secret: $COOKIE_SECRET' >> /root/app-credentials.txt\r"
+expect "~#"
+
+# Clone repository
+send "cd /var/www/quantummftools\r"
+expect "~#"
+send "git clone https://github.com/pixelforegllc/quantummftools-dash.git .\r"
+expect "~#"
+
+# Install dependencies and build
+send "cd backend && npm install\r"
+expect "~#"
+send "cd ../frontend && npm install && npm run build\r"
+expect "~#"
+
+# Start application with PM2
+send "cd /var/www/quantummftools\r"
+expect "~#"
+send "pm2 start backend/src/index.js --name quantummftools\r"
+expect "~#"
+send "pm2 save\r"
+expect "~#"
+send "pm2 startup\r"
+expect "~#"
+
+# Exit
+send "exit\r"
+expect eof
+
+# Save credentials locally
+exec echo "Application Credentials" > app-credentials.txt
+exec echo "JWT Secret: $JWT_SECRET" >> app-credentials.txt
+exec echo "Refresh Token Secret: $REFRESH_TOKEN_SECRET" >> app-credentials.txt
+exec echo "Cookie Secret: $COOKIE_SECRET" >> app-credentials.txt
