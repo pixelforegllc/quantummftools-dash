@@ -16,38 +16,50 @@ jobs:
         mongodb-version: [7.0]
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v3
     
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Set up Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+
+    - name: Clean npm cache
+      run: |
+        echo "Cleaning npm cache..."
+        npm cache clean --force
+        
+    - name: Setup backend environment
+      run: |
+        echo "Node version:"
+        node --version
+        echo "NPM version:"
+        npm --version
+        
+    - name: Install backend dependencies
+      working-directory: ./backend
+      run: |
+        echo "Installing backend dependencies..."
+        npm install --verbose
         
     - name: Start MongoDB
       uses: supercharge/mongodb-github-action@1.10.0
       with:
         mongodb-version: ${{ matrix.mongodb-version }}
-
-    - name: Install Dependencies
-      run: |
-        cd backend
-        npm ci
         
     - name: Run Linter
-      run: |
-        cd backend
-        npm run lint
+      working-directory: ./backend
+      run: npm run lint
       
     - name: Run Tests
-      run: |
-        cd backend
-        npm test
+      working-directory: ./backend
+      run: npm test
       env:
         CI: true
+        NODE_ENV: test
         MONGODB_URI: mongodb://localhost:27017/quantummftools_test
         
     - name: Build
-      run: |
-        cd backend
-        npm run build --if-present
+      working-directory: ./backend
+      run: npm run build --if-present

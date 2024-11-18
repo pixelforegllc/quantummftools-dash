@@ -1,0 +1,17 @@
+{
+  "name": "quantummftools-dash",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "test": "npm run test --workspace backend",
+    "lint": "npm run lint --workspace backend",
+    "lint:fix": "npm run lint:fix --workspace backend",
+    "dev:backend": "npm run dev --workspace backend",
+    "dev:frontend": "npm run dev --workspace frontend",
+    "postinstall": "npm install --prefix backend"
+  }
+}
