@@ -28,6 +28,7 @@ const recipientSchema = new mongoose.Schema({
     }
 }, { _id: false });
 
+// eslint-disable-next-line no-unused-vars
 const timeWindowSchema = new mongoose.Schema({
     enabled: {
         type: Boolean,
